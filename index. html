@@ -1,107 +1,155 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>777 BITCASE MONEY</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>777 Bitcase Money</title>
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;
- font-family:Arial,sans-serif;
- background:#101323;
- color:white;
- text-align:center;
-}
-header{
- background:#202b50;
- padding:22px;
- color:#ffd84d;
- font-size:25px;
- font-weight:bold;
-}
-.container{padding:18px;max-width:500px;margin:auto}
-.wallet{
- background:linear-gradient(135deg,#263e72,#151c38);
- padding:25px;
- border-radius:18px;
- margin:18px 0;
-}
-.balance{font-size:34px;color:#ffe05b;margin:12px}
-button{
- border:0;
- border-radius:10px;
- padding:13px 18px;
- margin:6px;
- font-size:16px;
- font-weight:bold;
- cursor:pointer;
-}
-.action{background:#ffce38;color:#171717}
-.game{
- background:#202b50;
- color:white;
- width:43%;
- min-height:90px;
-}
-.game:active,button:active{opacity:.7}
+body{margin:0;background:#101323;color:white;font-family:Arial}
+header{background:#202b50;padding:20px;text-align:center;color:#ffd84d;font-size:25px;font-weight:bold}
+nav{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:12px}
+button{background:#263e72;color:white;border:1px solid #52638d;padding:14px;border-radius:10px;font-size:16px}
+button:active{background:#425d9b}
+.container{padding:15px;max-width:650px;margin:auto}
+.card{background:#202b50;padding:16px;margin:12px 0;border-radius:12px}
 h2{color:#ffd84d}
-#message{color:#ffe05b;min-height:24px}
-footer{color:#aaa;padding:25px;font-size:13px}
+input,textarea{width:100%;padding:13px;margin:8px 0;border-radius:8px}
+.gamegrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.gamegrid button{min-height:65px}
+.hidden{display:none}
+.qr{background:white;color:#222;padding:15px;border-radius:12px;text-align:center}
+.qr img{width:100%;max-width:260px;min-height:100px;object-fit:contain}
 </style>
 </head>
 <body>
-
-<header>🎮 777 BITCASE MONEY</header>
-
+<header>777 BITCASE MONEY</header>
 <div class="container">
+<nav>
+<button onclick="show('home')">Home</button>
+<button onclick="show('games')">All Games</button>
+<button onclick="show('deposit')">Deposit</button>
+<button onclick="show('account')">My Account</button>
+<button onclick="show('support')">Customer Care</button>
+<button onclick="shareApp()">Share App</button>
+</nav>
 
-<div class="wallet">
-<h2>MY WALLET</h2>
-<div class="balance" id="balance">₹1000</div>
-<p>Demo Balance Only</p>
-<button class="action" onclick="deposit()">Deposit</button>
-<button class="action" onclick="withdraw()">Withdraw</button>
+<section id="home">
+<div class="card">
+<h2>Welcome to 777 Bitcase Money</h2>
+<p>Welcome! Enjoy our game collection.</p>
+<button onclick="show('games')">Play Games</button>
 </div>
-
-<h2>OUR GAMES</h2>
-
-<div>
-<button class="game" onclick="play('Plane Game')">✈️<br>Plane Game</button>
-<button class="game" onclick="play('Ludo')">🎲<br>Ludo</button>
-<button class="game" onclick="play('Cards')">🃏<br>Cards</button>
-<button class="game" onclick="play('Mines')">💣<br>Mines</button>
-<button class="game" onclick="play('Wheel')">🎡<br>Wheel</button>
+<div class="card">
+<h2>My Demo Points</h2>
+<h1 id="points">1000</h1>
+<p>Demo points only. No cash value.</p>
 </div>
+</section>
 
-<p id="message">Welcome to 777 BITCASE MONEY!</p>
+<section id="games" class="hidden">
+<h2>All 37 Games</h2>
+<div id="gameList" class="gamegrid"></div>
+</section>
 
+<section id="play" class="hidden">
+<div class="card">
+<h2 id="gameName">Game</h2>
+<p>Demo Game Mode</p>
+<h3>Demo Points: <span id="gamePoints">1000</span></h3>
+<p>No real-money betting or cash prizes.</p>
+<button onclick="show('games')">Back to Games</button>
 </div>
+</section>
 
-<footer>777 BITCASE MONEY<br>Demo Gaming App</footer>
+<section id="deposit" class="hidden">
+<div class="card">
+<h2>Deposit / Payment</h2>
+<div class="qr">
+<h3>Scan QR Code</h3>
+<img src="payment-qr.jpg" alt="Your payment QR code">
+<p>UPI ID</p>
+<strong>6294803559@ptsbi</strong>
+</div>
+<p>Scan the QR code using your UPI app. Payment is handled by your bank or UPI provider.</p>
+<p>Keep your payment receipt. Demo points are not real money and payment will not automatically add game credits.</p>
+</div>
+</section>
+
+<section id="account" class="hidden">
+<div class="card">
+<h2>My Account</h2>
+<p>Demo Points: <strong id="accountPoints">1000</strong></p>
+<p>Game mode: Demo only</p>
+</div>
+</section>
+
+<section id="support" class="hidden">
+<div class="card">
+<h2>Customer Care</h2>
+<p>Write your question or complaint.</p>
+<input id="customerName" placeholder="Your Name">
+<textarea id="complaint" placeholder="Write your message"></textarea>
+<button onclick="sendComplaint()">Submit Complaint</button>
+<p id="supportMessage"></p>
+</div>
+</section>
+</div>
 
 <script>
-let balance=1000;
+const games=[
+"Aviator","Money Coming","Chicken Road 2","GO RUSH",
+"Fortune Gems","Chicken Road","Vortex","Aviatrix",
+"Chicky Run","Crash Bonus","Up & Down","Andar Bahar",
+"Hindi Roulette","Happy Fishing","Forest Arrow","Mines",
+"FB Sport","Super Ace","Money Coming Expand",
+"JILI Dragon Tiger","Teen Patti","Lightning Roulette",
+"Crazy Time","Halloween Meow","Auto-Roulette",
+"Hindi Lightning Roulette","Win Drop","Lucky Seven",
+"Crazy 777","Charge Buffalo","Color Game","Ludo Quick",
+"Keno","Rommy","Bingo Adventure","Hi-Lo","Pappu"
+];
 
-function updateBalance(){
- document.getElementById("balance").innerText="₹"+balance;
+let points=1000;
+
+function show(id){
+document.querySelectorAll("section").forEach(s=>s.classList.add("hidden"));
+document.getElementById(id).classList.remove("hidden");
 }
 
-function deposit(){
- document.getElementById("message").innerText=
- "Demo only: Real deposits are not available.";
+function openGame(name){
+document.getElementById("gameName").textContent=name;
+document.getElementById("gamePoints").textContent=points;
+show("play");
 }
 
-function withdraw(){
- document.getElementById("message").innerText=
- "Demo only: Real withdrawals are not available.";
+const list=document.getElementById("gameList");
+games.forEach((name,i)=>{
+const b=document.createElement("button");
+b.textContent=(i+1)+". "+name+" - Play Game";
+b.onclick=()=>openGame(name);
+list.appendChild(b);
+});
+
+function shareApp(){
+if(navigator.share){
+navigator.share({title:"777 Bitcase Money",text:"Try 777 Bitcase Money"});
+}else{
+alert("Share option is not available on this device.");
+}
 }
 
-function play(game){
- document.getElementById("message").innerText=
- game+" - Coming Soon!";
+function sendComplaint(){
+const name=document.getElementById("customerName").value.trim();
+const msg=document.getElementById("complaint").value.trim();
+if(!name||!msg){
+alert("Please enter your name and message.");
+return;
+}
+document.getElementById("supportMessage").textContent=
+"Your message has been recorded on this device. Online support connection is not configured yet.";
 }
 </script>
-
 </body>
 </html>
